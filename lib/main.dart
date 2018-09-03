@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/NetworkAppPage.dart';
-import 'package:flutter_app/news_detail.dart';
+import 'package:flutter_app/banner_page.dart';
+import 'package:flutter_app/base_page.dart';
 
 void main() => runApp(new MyApp());
 
@@ -55,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
 //      _counter++;
-      Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context)=>new NetworkAppPage()));
+//      Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context)=>new NetworkAppPage()));
     });
   }
 
@@ -77,34 +78,37 @@ class _MyHomePageState extends State<MyHomePage> {
 //        ],
       ),
 
-      body:new PageView(
-        controller: new PageController(
-          initialPage: 0,
-          keepPage: true,
-        ),
+      body:new ListView(
         children: <Widget>[
-          new Image.asset("images/banner.jpg"),
-          new Image.asset("images/banner1.jpg"),
-          new Image.asset("images/banner2.jpg"),
+          new Padding(
+            padding: const EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
+            child: new RaisedButton(
+                textColor: Colors.black,
+                child: new Text('基础控件'),
+                onPressed: ()=>Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context)=>new BaseViewPage()))
+            ),
+          ),
+          new Padding(
+            padding: const EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
+            child: new RaisedButton(
+                textColor: Colors.black,
+                child: new Text('到广告栏页面'),
+                onPressed: ()=>Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context)=>new BannerPage()))
+            ),
+          ),
+          new Padding(
+            padding: EdgeInsets.all(10.0),
+            child: new RaisedButton(
+                onPressed: ()=>Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context)=>new NetworkAppPage())),
+                textColor: Colors.black,
+                child: new Text('到网络请求列表'),
+                elevation: 2.0,
+            ),
+
+          ),
         ],
       ),
-//      new Center(
-//        // Center is a layout widget. It takes a single child and positions it
-//        // in the middle of the parent.
-//        child: new Column(
-//          mainAxisAlignment: MainAxisAlignment.center,
-//          children: <Widget>[
-//            new Text(
-//              'You have pushed the button this many times:afdsafdsafdsafdsafdsafdsafdsa',
-//            ),
-//            new Text(
-//              '$_counter',
-//              style: Theme.of(context).textTheme.display1,
-//            ),
-//
-//          ],
-//        ),
-//      ),
+
       floatingActionButton: new FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',

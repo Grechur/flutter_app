@@ -60,8 +60,8 @@ class _NetworkAppPage extends State<NetworkAppPage>{
 
         ],
       ),
-      endDrawer: new ListView.builder(itemCount: storiesList.length,itemBuilder: buildItem),
-
+      endDrawer: new Drawer(child: new ListView.builder(itemCount: storiesList.length,itemBuilder: buildItem),),
+      floatingActionButton: new FloatingActionButton(onPressed: null),
     );
   }
 
@@ -185,10 +185,10 @@ class _NetworkAppPage extends State<NetworkAppPage>{
                         new Text(hotNewsStoriesModel.type.toString(),style: new TextStyle(fontSize: 14.0,color: Colors.grey)),
                         new Text(hotNewsStoriesModel.id.toString(),style: new TextStyle(fontSize: 14.0,color: Colors.grey))
                       ],
-                        crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.center,),
-                      padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 10.0),
-                      margin: EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 10.0),
-                      width: 180.0,
+                      crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.center,),
+                      padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 10.0),
+                      margin: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
+                      width: 133.0,
                     ),
 
                   ],

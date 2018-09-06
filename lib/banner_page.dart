@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class BannerPage extends StatefulWidget{
@@ -11,10 +12,15 @@ class BannerPage extends StatefulWidget{
 }
 
 class _BannerPage extends State<BannerPage>{
-  static int fakeLength = 1000;
   PageController _pageController =
-  new PageController(initialPage: fakeLength ~/ 2);
+  new PageController();
 
+  List<String> data = ["images/banner.jpg","images/banner1.jpg","images/banner2.jpg"];
+
+  List<String> bannerList = [];
+
+  List<Widget> widgets = [];
+  
   Timer _timer;
 
   Duration _bannerDuration = new Duration(seconds: 3);
@@ -26,10 +32,14 @@ class _BannerPage extends State<BannerPage>{
   int _curPageIndex = 0;
 
   int _curIndicatorsIndex = 0;
+
+  bool isFirst = true;
+
+
+
   @override
   void initState() {
     super.initState();
-    _curPageIndex = fakeLength ~/ 2;
 
     initTimer();
   }
@@ -42,6 +52,7 @@ class _BannerPage extends State<BannerPage>{
 
   @override
   Widget build(BuildContext context) {
+    _initData();
     // TODO: implement build
     return new Scaffold(
       appBar: new AppBar(
@@ -50,41 +61,95 @@ class _BannerPage extends State<BannerPage>{
       body: new NotificationListener(
       onNotification: (ScrollNotification scrollNotification) {
       if (scrollNotification is ScrollEndNotification || scrollNotification is UserScrollNotification) {
-      _isEndScroll = true;
-      } else {
-      _isEndScroll = false;
-      }
-      return false;
+        if (_curPageIndex == 0) {
+          setState(() {
+            _curPageIndex =  bannerList.length~/2;
+            _pageController.jumpToPage(_curPageIndex);
+          });
+        }
+          _isEndScroll = true;
+        } else {
+          _isEndScroll = false;
+        }
+        return false;
       },
-      child:new PageView(
+      child:
+      new PageView.custom(
         controller: _pageController,
-        children: <Widget>[
-          new Image.asset("images/banner.jpg"),
-          new Image.asset("images/banner1.jpg"),
-          new Image.asset("images/banner2.jpg"),
-        ],
+        physics: const PageScrollPhysics(parent: const BouncingScrollPhysics()),
         onPageChanged: (index) {
           _changePage(index);
         },
+      childrenDelegate: SliverChildBuilderDelegate((context, index){
+      int current = index % data.length;
+      String bannerWithEval = bannerList[current];
+      return GestureDetector(
+      onTap: (){
+        print(current);
+      },
+      child: Image.asset(bannerWithEval,
+        fit: BoxFit.fitWidth),);
+      },
+      childCount: bannerList.length,
       ),
-    ),
+
+      ),
+      )
     );
   }
 
   void _changePage(int index) {
     _curPageIndex = index;
     //获取指示器索引
-    _curIndicatorsIndex = index % 3;
+    _curIndicatorsIndex = index % data.length;
     setState(() {});
   }
 
+  _initData(){
+    int index = data.length-1;
+    if(isFirst||_curPageIndex%data.length==index) {
+      isFirst = false;
+//      for(int i = 0;i<2;i++){
+        bannerList.addAll(data);
+//      }
+    }
+    print(bannerList.length);
+  }
 
   initTimer() {
     _timer = new Timer.periodic(_bannerDuration, (timer) {
       if(_isEndScroll){
-        _pageController.animateToPage(_curPageIndex + 1,
+        _curPageIndex += 1;
+        print(_curPageIndex);
+        _pageController.animateToPage(_curPageIndex,
             duration: _bannerAnimationDuration, curve: Curves.linear);
       }
     });
   }
+
+  List<Widget> buildTabPage() {
+    int index = data.length-1;
+    if(isFirst||_curPageIndex%data.length==index) {
+      isFirst = false;
+      for (int i = 0; i < data.length; i++) {
+        widgets.insert(i, _itemWidget(i));
+      }
+    }
+//    print("widgets");
+//    print(widgets.length);
+    return widgets;
+  }
+
+  Widget _itemWidget(int i) {
+    return new Container(
+      child: new GestureDetector(
+        onTap: ()=>setState(() {
+          print(i);
+        }),
+        child: new Image.asset(bannerList[i]),
+      )
+    );
+  }
+
+
 }

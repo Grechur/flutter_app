@@ -13,6 +13,12 @@ class BaseViewPage extends StatefulWidget{
 class _BaseViewPage extends State<BaseViewPage>{
   String _textSub = '';
   final TextEditingController _controller = new TextEditingController();
+  bool val =false;
+  bool select = false;
+
+  int rvalue = 0;
+
+  double slid = 0.0;
   @override
   Widget build(BuildContext context) {
 
@@ -34,7 +40,6 @@ class _BaseViewPage extends State<BaseViewPage>{
             child: new TextField(
               controller: _controller,
               keyboardType: TextInputType.text,
-              autofocus: true,
               autocorrect: false,
               decoration: new InputDecoration(
                 prefixIcon: new Icon(Icons.search),
@@ -75,7 +80,29 @@ class _BaseViewPage extends State<BaseViewPage>{
             size: 80.0,
             textColor: Colors.blue,
           ),
-
+          new Row(
+            children: <Widget>[
+              new Switch(value: val, onChanged: (bool val){
+                _check(val);
+              }),
+              new Checkbox(value: select, onChanged: (bool cb) {
+                setState(() {
+                  select = cb;
+                  print(select);
+                });
+              }
+                ),
+              new Slider(value: slid, onChanged: (double s){slideChange(s);}),
+            ],
+          ),
+    new Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: <Widget>[
+        new Radio(value: 1, groupValue: rvalue, onChanged: (int rval){method1(rval);}),
+        new Radio(value: 2, groupValue: rvalue, onChanged: (int rval){method1(rval);}),
+        new Radio(value: 3, groupValue: rvalue, onChanged: (int rval){method1(rval);}),
+        ],
+    ),
         ],
       ),
     );
@@ -84,6 +111,25 @@ class _BaseViewPage extends State<BaseViewPage>{
   void _handleMessage(String text) {
     setState(() {
       _textSub = text;
+    });
+  }
+
+  void _check(bool val) {
+    setState(() {
+      this.val = val;
+    });
+  }
+
+  void method1(int rval) {
+    setState(() {
+      this.rvalue = rval;
+    });
+  }
+
+  slideChange(double slid) {
+    setState(() {
+      this.slid = slid;
+      print(slid);
     });
   }
 }

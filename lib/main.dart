@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/NetworkAppPage.dart';
 import 'package:flutter_app/banner_page.dart';
 import 'package:flutter_app/base_page.dart';
+import 'package:flutter_app/new_banner_page.dart';
 
 void main() => runApp(new MyApp());
 
@@ -96,6 +97,14 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           new Padding(
+            padding: const EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
+            child: new RaisedButton(
+                textColor: Colors.black,
+                child: new Text('到新广告栏页面'),
+                onPressed: ()=>Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context)=>new BaseBannerPage()))
+            ),
+          ),
+          new Padding(
             padding: EdgeInsets.all(10.0),
             child: new RaisedButton(
                 onPressed: ()=>Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context)=>new NetworkAppPage())),
@@ -107,7 +116,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-
       floatingActionButton: new FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',

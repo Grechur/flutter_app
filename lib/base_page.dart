@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class BaseViewPage extends StatefulWidget{
@@ -19,6 +21,14 @@ class _BaseViewPage extends State<BaseViewPage>{
   int rvalue = 0;
 
   double slid = 0.0;
+
+  bool highLight = false;
+
+  final snackBar =
+  new SnackBar(content: new Text('这是一个SnackBar'));
+
+  DateTime dateTime ;
+  TimeOfDay timeOfDay;
   @override
   Widget build(BuildContext context) {
 
@@ -92,7 +102,7 @@ class _BaseViewPage extends State<BaseViewPage>{
                 });
               }
                 ),
-              new Slider(value: slid, onChanged: (double s){slideChange(s);}),
+              new Slider(value: slid, onChanged: (double s){slideChange(s);},min: 0.0,max: 100.0,),
             ],
           ),
     new Row(
@@ -101,12 +111,43 @@ class _BaseViewPage extends State<BaseViewPage>{
         new Radio(value: 1, groupValue: rvalue, onChanged: (int rval){method1(rval);}),
         new Radio(value: 2, groupValue: rvalue, onChanged: (int rval){method1(rval);}),
         new Radio(value: 3, groupValue: rvalue, onChanged: (int rval){method1(rval);}),
-        ],
-    ),
+        new RaisedButton(onPressed: ()=>rButton(),
+          color:Colors.blue,
+          textTheme: ButtonTextTheme.accent,
+          child: new Text("raisedbtn",style: new TextStyle(color: highLight?Colors.white:Colors.yellowAccent),),
+          shape: StadiumBorder(side: const BorderSide(color:Colors.lightGreenAccent,width: 1.0, style: BorderStyle.solid)),
+          onHighlightChanged: (bool val){_onHighlight(val);},
+          highlightColor: Colors.red,),
+//        Border(
+//          top: const BorderSide(color:Colors.lightGreenAccent,width: 1.0, style: BorderStyle.solid),
+//          right: const BorderSide(color:Colors.lightGreenAccent,width: 1.0, style: BorderStyle.solid),
+//          bottom: const BorderSide(color:Colors.lightGreenAccent,width: 1.0, style: BorderStyle.solid),
+//          left: const BorderSide(color:Colors.lightGreenAccent,width: 1.0, style: BorderStyle.solid),
+//        ),
+          new Builder(builder: (BuildContext context){
+            return new FlatButton(onPressed: ()=>flatClick(context),
+              child: new Text("flatbtn"),
+              shape:StadiumBorder(side: const BorderSide(color:Colors.lightGreenAccent,width: 1.0, style: BorderStyle.solid)) ,
+              highlightColor: Colors.amberAccent,
+            );
+          }),
+
+            ],
+        ),
+        new ButtonBar(
+          children: <Widget>[
+            new IconButton(icon: new Icon(Icons.home), onPressed: ()=>{}),
+            new FlatButton(onPressed: ()=>_showTime(), child: new Text(dateTime==null?'选择日期':dateTime.toString())),
+            new FlatButton(onPressed: ()=>_showTimeofDay(), child: new Text(timeOfDay==null ? '选择时间':timeOfDay.toString()))
+          ],
+        )
         ],
       ),
+
     );
   }
+
+
 
   void _handleMessage(String text) {
     setState(() {
@@ -132,4 +173,61 @@ class _BaseViewPage extends State<BaseViewPage>{
       print(slid);
     });
   }
+
+  rButton() {
+    setState(() {
+      dateTime = new DateTime.now();
+      print("点击按钮"+dateTime.toString());
+    });
+
+
+  }
+
+  void _onHighlight(bool val) {
+    setState(() {
+      this.highLight = val;
+    });
+  }
+
+  flatClick(BuildContext context) {
+    Scaffold.of(context).showSnackBar(snackBar);
+  }
+
+  _showTime() {
+    _selectDate(context);
+  }
+
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime _pick = await showDatePicker(
+        context: context,
+        initialDate: new DateTime.now(),
+        firstDate: new DateTime(1991),
+        lastDate: new DateTime(2050)
+    );
+    if(_pick!=null){
+      setState(() {
+        dateTime = _pick;
+      });
+    }
+  }
+
+
+  _showTimeofDay() {
+    _selectTime(context);
+  }
+
+  Future<Null> _selectTime(BuildContext context) async {
+    final TimeOfDay _pick = await showTimePicker(
+        context: context,
+        initialTime: new TimeOfDay.now(),
+
+    );
+    if(_pick!=null){
+      setState(() {
+        timeOfDay = _pick;
+      });
+    }
+  }
+
+
 }
